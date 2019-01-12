@@ -1,0 +1,3 @@
+dotenv
+Pillow==5.4
+twilio
