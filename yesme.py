@@ -5,7 +5,9 @@ from PIL import Image, ImageOps
 import requests
 import sys
 from twilio.rest import Client
+from inky import InkyPHAT
 
+inky_display = InkyPHAT('yellow')
 BASEDIR = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(os.path.join(BASEDIR, '.env'))
 
@@ -59,8 +61,13 @@ try:
         img = img.resize((int(imgRatio*INKY_HEIGHT), int(INKY_HEIGHT)), resample=Image.BILINEAR)
         img = img.crop(((int((img.size[0]-INKY_WIDTH)/2), 0, int((img.size[0]-INKY_WIDTH)/2)+int(INKY_WIDTH), int(INKY_HEIGHT))))
     img = ImageOps.posterize(img, bits=1)
+    img = img.rotate(90, expand=1)
     recolor(img)
+    img = img.convert(mode="RGB")
     img.show()
+    tesimg = Image.open('tesimg.png')
+    inky_display.set_image(tesimg)
+    inky_display.show()
 except IOError:
     print("Unable to open image")
     sys.exit(1)
