@@ -41,6 +41,7 @@ for msg in recentmsgs:
     if msg.sid[:1] == "M" and msg.to == TWILIO_PHONE_NUMBER:
         message = client.messages(msg.sid).fetch()
         print(message)
+        break
 allimgs = client.messages(message.sid).media.list()
 for img in allimgs:
     imageuri = (TWILIO_BASE_URI + str(img.uri)).strip(".json'").strip("u'")
@@ -57,8 +58,8 @@ inky_display = InkyPHAT("yellow")
 
 # Resize and crop incoming image
 originalimage = Image.open(response)
-originalimageW = float(img.size[0])
-originalimageH = float(img.size[1])
+originalimageW = float(originalimage.size[0])
+originalimageH = float(originalimage.size[1])
 imgRatio = originalimageW/originalimageH
 if (imgRatio >= inky_display.HEIGHT/inky_display.WIDTH):
     originalimage = originalimage.resize((inky_display.WIDTH, int((1/imgRatio)*inky_display.WIDTH)), resample=Image.BILINEAR) 
