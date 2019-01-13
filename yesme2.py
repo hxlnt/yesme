@@ -64,7 +64,7 @@ if (imgRatio >= inky_display.HEIGHT/inky_display.WIDTH):
     originalimage = originalimage.crop((0, 0, inky_display.WIDTH, inky_display.HEIGHT))
 else:
     originalimage = originalimage.resize((int(imgRatio*inky_display.HEIGHT), inky_display.HEIGHT), resample=Image.BILINEAR)
-    originalimage = originalimage.crop((((originalimage.size[0]-inky_display.WIDTH)/2, 0, originalimage.size[0]-inky_display.WIDTH)/2+inky_display.WIDTH, inky_display.HEIGHT)))
+    originalimage = originalimage.crop((originalimage.size[0]-inky_display.WIDTH)/2, 0, (originalimage.size[0]-inky_display.WIDTH)/2+inky_display.WIDTH, inky_display.HEIGHT)
 originalimage = originalimage.rotate(90, expand=1)
 
 # Downsample original image
