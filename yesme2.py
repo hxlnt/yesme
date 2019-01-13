@@ -15,6 +15,12 @@ TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
 TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
 TWILIO_PHONE_NUMBER = os.getenv('TWILIO_PHONE_NUMBER')
 TWILIO_BASE_URI = "https://api.twilio.com"
+# class inky_display:
+#     HEIGHT = 212
+#     WIDTH = 104
+#     WHITE = (255,255,255)
+#     BLACK = (0,0,0)
+#     YELLOW = (255,255,0)
 
 # Downsample method
 def recolor(img):
@@ -51,8 +57,6 @@ try:
 except requests.exceptions.RequestException as e:  
     sys.exit(1)
     
-
-
 # Create inkyPHAT image
 inky_display = InkyPHAT("yellow")
 
@@ -66,13 +70,15 @@ if (imgRatio >= inky_display.HEIGHT/inky_display.WIDTH):
     originalimage = originalimage.crop((0, 0, inky_display.WIDTH, inky_display.HEIGHT))
 else:
     originalimage = originalimage.resize((int(imgRatio*inky_display.HEIGHT), inky_display.HEIGHT), resample=Image.BILINEAR)
-    originalimage = originalimage.crop((originalimage.size[0]-inky_display.WIDTH)/2, 0, ((originalimage.size[0]-inky_display.WIDTH)/2)+inky_display.WIDTH, inky_display.HEIGHT)
+    originalimage = originalimage.crop(((originalimage.size[0]-inky_display.WIDTH)/2, 0, ((originalimage.size[0]-inky_display.WIDTH)/2)+inky_display.WIDTH, inky_display.HEIGHT))
 
 # Downsample original image
 originalimage = ImageOps.posterize(originalimage, bits=1)
+#originalimage = originalimage.rotate(90, expand=1)
 convertedimage = recolor(originalimage)
+convertedimage.show()
 
 # Display on inkyPHAT
-convertedimage = convertedimage.rotate(90, expand=1)
+
 inky_display.set_image(convertedimage)
 inky_display.show()
