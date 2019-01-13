@@ -41,15 +41,18 @@ currentimage = "none"
 for msg in recentmsgs:
     if msg.sid[:1] == "M" and msg.to == TWILIO_PHONE_NUMBER:
         message = client.messages(msg.sid).fetch()
+        print(message)
+        allimgs = client.messages(message.sid).media.list()
+        for img in allimgs:
+            imageuri = (TWILIO_BASE_URI + str(img.uri)).strip(".json'").strip("u'")
+        print(imageuri)
         break
-allimgs = client.messages(message.sid).media.list()
-for img in allimgs:
-    imageuri = (TWILIO_BASE_URI + str(img.uri)).strip(".json'").strip("u'")
-print(imageuri)
 try:
     response = requests.get(imageuri, stream=True).raw
 except requests.exceptions.RequestException as e:  
     sys.exit(1)
+    
+
 
 # Create inkyPHAT image
 inky_display = InkyPHAT("yellow")
