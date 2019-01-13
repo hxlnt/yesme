@@ -18,7 +18,7 @@ TWILIO_BASE_URI = "https://api.twilio.com"
 
 # Downsample method
 def recolor(img):
-    img = image.convert('RGB')
+    img = img.convert('RGB')
     inky_img = Image.new("P", (inky_display.WIDTH, inky_display.HEIGHT))
     for y in range(inky_display.HEIGHT):
         for x in range(inky_display.WIDTH):
