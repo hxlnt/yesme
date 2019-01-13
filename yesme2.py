@@ -23,7 +23,7 @@ def recolor(img):
     for y in range(inky_display.HEIGHT):
         for x in range(inky_display.WIDTH):
             pixelMap = img.load()
-            if pixelMap[x,y] == (128,128,128) or pixelMap[x,y] == (255,255,255):
+            if (pixelMap[x,y] == (128,128,128) or pixelMap[x,y] == (255,255,255)):
                 inky_img.putpixel((x,y), (255,255,255))
             elif pixelMap[x,y] == (0, 0, 0):
                 inky_img.putpixel((x,y), (0,0,0))
