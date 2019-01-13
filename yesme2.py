@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-#from inky import InkyPHAT
+from inky import InkyPHAT
 import math
 import os
 from PIL import Image, ImageOps
@@ -15,12 +15,12 @@ TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
 TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
 TWILIO_PHONE_NUMBER = os.getenv('TWILIO_PHONE_NUMBER')
 TWILIO_BASE_URI = "https://api.twilio.com"
-class inky_display:
-    HEIGHT = 104
-    WIDTH = 212
-    WHITE = (255,255,255)
-    BLACK = (0,0,0)
-    YELLOW = (255,255,0)
+# class inky_display:
+#     HEIGHT = 104
+#     WIDTH = 212
+#     WHITE = (255,255,255)
+#     BLACK = (0,0,0)
+#     YELLOW = (255,255,0)
 
 # Downsample method
 def recolor(img):
@@ -58,7 +58,7 @@ except requests.exceptions.RequestException as e:
     sys.exit(1)
     
 # Create inkyPHAT image
-#inky_display = InkyPHAT("yellow")
+inky_display = InkyPHAT("yellow")
 
 # Resize and crop incoming image
 originalimage = Image.open(response)
@@ -83,5 +83,5 @@ convertedimage.show()
 
 # Display on inkyPHAT
 
-# inky_display.set_image(convertedimage)
-# inky_display.show()
+inky_display.set_image(convertedimage)
+inky_display.show()
