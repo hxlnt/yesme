@@ -24,11 +24,11 @@ def recolor(img):
         for x in range(inky_display.WIDTH):
             pixelMap = img.load()
             if (pixelMap[x,y] == (128,128,128) or pixelMap[x,y] == (255,255,255)):
-                inky_img.putpixel((x,y), (255,255,255))
+                inky_img.putpixel((x,y), inky_display.WHITE)
             elif pixelMap[x,y] == (0, 0, 0):
-                inky_img.putpixel((x,y), (0,0,0))
+                inky_img.putpixel((x,y), inky_display.BLACK)
             else:
-                inky_img.putpixel((x,y), (255,255,0))
+                inky_img.putpixel((x,y), inky_display.YELLOW)
     return inky_img
 
 # Get latest image
