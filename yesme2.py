@@ -41,7 +41,6 @@ for msg in recentmsgs:
     if msg.sid[:1] == "M" and msg.to == TWILIO_PHONE_NUMBER:
         message = client.messages(msg.sid).fetch()
         print(message)
-        break
 allimgs = client.messages(message.sid).media.list()
 for img in allimgs:
     imageuri = (TWILIO_BASE_URI + str(img.uri)).strip(".json'").strip("u'")
