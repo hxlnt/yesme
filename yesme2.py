@@ -71,7 +71,7 @@ print(imgRatio)
 #     originalimage = originalimage.resize((inky_display.HEIGHT, int((1/imgRatio)*inky_display.HEIGHT)), resample=Image.BILINEAR) 
 #     originalimage = originalimage.crop((0, 0, inky_display.WIDTH, inky_display.HEIGHT))
 # else:
-    originalimage = originalimage.resize((inky_display.WIDTH, int(originalimageW/(originalimageW/inky_display.HEIGHT))),resample=Image.BILINEAR)
+    originalimage = originalimage.resize((inky_display.WIDTH, int(originalimageW/(originalimageH/inky_display.HEIGHT))),resample=Image.BILINEAR)
     originalimage = originalimage.crop((0, 0, inky_display.WIDTH, inky_display.HEIGHT))
 
 # Downsample original image
