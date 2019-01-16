@@ -24,7 +24,6 @@ TWILIO_BASE_URI = "https://api.twilio.com"
 
 # Downsample method
 def recolor(img):
-    img = img.convert('RGB')
     inky_img = Image.new("P", (inky_display.WIDTH, inky_display.HEIGHT))
     for y in range(inky_display.HEIGHT):
         for x in range(inky_display.WIDTH):
@@ -67,21 +66,23 @@ originalimageW = float(originalimage.size[0])
 originalimageH = float(originalimage.size[1])
 imgRatio = originalimageW/originalimageH
 print(imgRatio)
-if (imgRatio >= inky_display.WIDTH/inky_display.HEIGHT):
-    originalimage = originalimage.resize((inky_display.HEIGHT, int((1/imgRatio)*inky_display.HEIGHT)), resample=Image.BILINEAR) 
+# Fix this later :)
+# if (imgRatio >= inky_display.WIDTH/inky_display.HEIGHT):
+#     originalimage = originalimage.resize((inky_display.HEIGHT, int((1/imgRatio)*inky_display.HEIGHT)), resample=Image.BILINEAR) 
+#     originalimage = originalimage.crop((0, 0, inky_display.WIDTH, inky_display.HEIGHT))
+# else:
+    originalimage = originalimage.resize((inky_display.WIDTH, int(originalimageW/(originalimageW/inky_display.HEIGHT))),resample=Image.BILINEAR)
     originalimage = originalimage.crop((0, 0, inky_display.WIDTH, inky_display.HEIGHT))
-else:
-    originalimage = originalimage.resize((int(imgRatio*inky_display.HEIGHT), inky_display.HEIGHT), resample=Image.BILINEAR)
-    originalimage = originalimage.crop(((int((originalimage.size[0]-inky_display.WIDTH)/2), 0, int((originalimage.size[0]-inky_display.WIDTH)/2)+inky_display.WIDTH, inky_display.HEIGHT)))
 
 # Downsample original image
-#originalimage = originalimage.rotate(90, expand=1)
-print(originalimage.size)
+print(originalimage.mode)
+originalimage = originalimage.convert(mode="P", dither=1, palette="ADAPTIVE", colors=256)
+originalimage = originalimage.convert(mode="RGB")
+originalimage = ImageOps.equalize(originalimage)
 originalimage = ImageOps.posterize(originalimage, bits=1)
 convertedimage = recolor(originalimage)
 convertedimage.show()
 
 # Display on inkyPHAT
-
-inky_display.set_image(convertedimage)
-inky_display.show()
+# inky_display.set_image(convertedimage)
+# inky_display.show()
