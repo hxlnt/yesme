@@ -1,12 +1,18 @@
 from dotenv import load_dotenv
-from inky import InkyPHAT
 import os
 from PIL import Image, ImageOps
 import requests
-from threading
+import threading
 from twilio.rest import Client
 
 load_dotenv(os.path.join(os.path.abspath(os.path.dirname(__file__)), '.env'))
+
+class inky_display:
+    HEIGHT = 104
+    WIDTH = 212
+    WHITE = (255,255,255)
+    BLACK = (0,0,0)
+    YELLOW = (255,255,0)
 
 # Getting latest media-containing message from Twilio
 def getLatestMediaMsg(msgarray):
@@ -31,16 +37,17 @@ def recolor(img):
     return inky_img
 
 def main():
-    threading.Timer(120, main).start()
+    #threading.Timer(120, main).start()
     try:
         incomingMsgs = client.messages.list(to=os.getenv('TWILIO_PHONE_NUMBER'))
-        sortedMsgList = sorted(msgarray, key=lambda msg:msg.date_sent, reverse=reverse)
+        sortedMsgList = sorted(incomingMsgs, key=lambda msg:msg.date_sent, reverse=True)
         latestMediaMsg = getLatestMediaMsg(sortedMsgList)
         latestImg = client.messages(latestMediaMsg.sid).media.list(limit=1)
         if (latestImg == client.messages(latestMediaMsg.sid).media.list(limit=1)):
-            break
+            pass
         else:
-            latestImgUrl = ("https://api.twilio.com" + str(img.uri)).strip(".json'").strip("u'")
+            latestImg = client.messages(latestMediaMsg.sid).media.list(limit=1)
+            latestImgUrl = ("https://api.twilio.com" + str(latestImg[0].uri)).strip(".json'").strip("u'")
             img = requests.get(latestImgUrl, stream=True).raw
     except requests.exceptions.RequestException as e:
         print("Could not grab latest image:")
@@ -50,9 +57,9 @@ def main():
     # Resize and crop incoming image
     img = Image.open(img)
     img = img.rotate(90, expand=1)
-    imgW = float(img.size[0])
-    imgH = float(img.size[1])
-    imgRatio = imgW/imgH
+    imgW = float(img.size[0]) #1994
+    imgH = float(img.size[1]) #1496
+    imgRatio = imgW/imgH #1.33
 
     if (imgRatio < float(inky_display.WIDTH)/float(inky_display.HEIGHT)):
         img = img.resize((inky_display.WIDTH, int(inky_display.WIDTH/imgRatio)), resample=Image.BILINEAR)
@@ -67,14 +74,10 @@ def main():
     img = img.convert(mode="RGB")
     img = ImageOps.posterize(img, bits=1)
     img = recolor(img)
-
-    inky_display.set_image(img)
-    inky_display.show()
+    img.show()
+    
 
 # Initialize Twilio client
 client = Client(os.getenv('TWILIO_ACCOUNT_SID'), os.getenv('TWILIO_AUTH_TOKEN'))
-
-# Initialize inky display
-inky_display = InkyPHAT("yellow")
 
 main()
