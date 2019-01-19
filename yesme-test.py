@@ -6,6 +6,7 @@ import threading
 from twilio.rest import Client
 
 load_dotenv(os.path.join(os.path.abspath(os.path.dirname(__file__)), '.env'))
+latestImgUrl = ""
 
 class inky_display:
     HEIGHT = 104
@@ -37,46 +38,40 @@ def recolor(img):
     return inky_img
 
 def main():
-    #threading.Timer(120, main).start()
+    threading.Timer(120, main).start()
+    global latestImgUrl
     try:
         incomingMsgs = client.messages.list(to=os.getenv('TWILIO_PHONE_NUMBER'))
         sortedMsgList = sorted(incomingMsgs, key=lambda msg:msg.date_sent, reverse=True)
         latestMediaMsg = getLatestMediaMsg(sortedMsgList)
-        latestImg = client.messages(latestMediaMsg.sid).media.list(limit=1)
-        if (latestImg == client.messages(latestMediaMsg.sid).media.list(limit=1)):
-            pass
-        else:
-            latestImg = client.messages(latestMediaMsg.sid).media.list(limit=1)
-            latestImgUrl = ("https://api.twilio.com" + str(latestImg[0].uri)).strip(".json'").strip("u'")
+        latestImg = client.messages(latestMediaMsg.sid).media.list(limit=1)[0]
+        if (latestImgUrl != ("https://api.twilio.com" + str(latestImg.uri)).strip(".json'").strip("u'")):
+            latestImgUrl = ("https://api.twilio.com" + str(latestImg.uri)).strip(".json'").strip("u'")
             img = requests.get(latestImgUrl, stream=True).raw
+            # Resize and crop incoming image
+            img = Image.open(img)
+            img = img.rotate(90, expand=1)
+            imgW = float(img.size[0])
+            imgH = float(img.size[1])
+            imgRatio = imgW/imgH
+            if (imgRatio < float(inky_display.WIDTH)/float(inky_display.HEIGHT)):
+                img = img.resize((inky_display.WIDTH, int(inky_display.WIDTH/imgRatio)), resample=Image.BILINEAR)
+                imgHeightMargin = int((img.size[1]-inky_display.HEIGHT)/2)
+                img = img.crop((0, imgHeightMargin, inky_display.WIDTH, inky_display.HEIGHT+imgHeightMargin))        
+            else:
+                img = img.resize((int(imgRatio*inky_display.HEIGHT), inky_display.HEIGHT), resample=Image.BILINEAR)
+                imgWidthMargin = int((img.size[0]-inky_display.WIDTH)/2)
+                img = img.crop((imgWidthMargin, 0, inky_display.WIDTH+imgWidthMargin, inky_display.HEIGHT))
+            img = img.convert(mode="P", dither=1, palette="ADAPTIVE", colors=256)
+            img = img.convert(mode="RGB")
+            img = ImageOps.posterize(img, bits=1)
+            img = recolor(img)
+            img.show()
     except requests.exceptions.RequestException as e:
         print("Could not grab latest image:")
         print(e)
         sys.exit(1)
-
-    # Resize and crop incoming image
-    img = Image.open(img)
-    img = img.rotate(90, expand=1)
-    imgW = float(img.size[0]) #1994
-    imgH = float(img.size[1]) #1496
-    imgRatio = imgW/imgH #1.33
-
-    if (imgRatio < float(inky_display.WIDTH)/float(inky_display.HEIGHT)):
-        img = img.resize((inky_display.WIDTH, int(inky_display.WIDTH/imgRatio)), resample=Image.BILINEAR)
-        imgHeightMargin = int((img.size[1]-inky_display.HEIGHT)/2)
-        img = img.crop((0, imgHeightMargin, inky_display.WIDTH, inky_display.HEIGHT+imgHeightMargin))        
-    else:
-        img = img.resize((int(imgRatio*inky_display.HEIGHT), inky_display.HEIGHT), resample=Image.BILINEAR)
-        imgWidthMargin = int((img.size[0]-inky_display.WIDTH)/2)
-        img = img.crop((imgWidthMargin, 0, inky_display.WIDTH+imgWidthMargin, inky_display.HEIGHT))
-
-    img = img.convert(mode="P", dither=1, palette="ADAPTIVE", colors=256)
-    img = img.convert(mode="RGB")
-    img = ImageOps.posterize(img, bits=1)
-    img = recolor(img)
-    img.show()
     
-
 # Initialize Twilio client
 client = Client(os.getenv('TWILIO_ACCOUNT_SID'), os.getenv('TWILIO_AUTH_TOKEN'))
 
