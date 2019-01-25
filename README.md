@@ -29,6 +29,7 @@ Here are some features I thought about adding:
  - Add text message support via the inky API
  - Add image cycling to the Python script
  - Switch between "recent image" mode and "image cycling" mode via a text-message control code from your personal number
+ 
 Maybe I'll get around to 'em some day. Or, hey, I'll take your PRs.
 
 ## The housing
