@@ -3,7 +3,7 @@ The **Y**ellow **e**Ink **S**elfie (Y.E.S.) Photo Booth!
 
 It's a Raspberry Pi outfitted with the [Pimoroni three-color eInk display](https://shop.pimoroni.com/products/inky-phat?variant=12549254905939) and housed in a cute custom photo booth! Gaze lovingly at photos of your friends~ <3
 
-![Y.E.S. you can!](yes.gif)
+![Y.E.S. you can!](yesme.gif)
 
 ## How it works
 1. Set yourself up with a Twilio account and number.
