@@ -5,13 +5,13 @@
 
 
 | 
-![Y.E.S. you can!](yesme.gif) | Y.E.S. is the **Y**ellow **e**Ink **S**elfie Photo Booth.<BR><BR>It's a Raspberry Pi outfitted with the [Pimoroni three-color eInk display](https://shop.pimoroni.com/products/inky-phat?variant=12549254905939) and housed in a cute custom photo booth! Gaze lovingly at photos of your friends~ <3 |
+![Y.E.S. you can!](yesme.gif) | Y.E.S. is the **Y**ellow **e**Ink **S**elfie Photo Booth.<BR><BR>It's a Raspberry Pi outfitted with a [Pimoroni eInk display](https://shop.pimoroni.com/products/inky-phat?variant=12549254905939) and housed in a cute photo booth! Text a photo to the Y.E.S., and it will magically appear on the dazzling three color eInk screen. |
 | ------ | :------ |
 |        |         |
 
 
 
-## How it works
+## How to build it
 1. Set yourself up with a Twilio account and number.
 2. Clone this repo down to a Raspberry Pi outfitted with Pimoroni's Inky pHat.
 3. Fill in the variables in ``.env`` with your Twilio shtuff.
